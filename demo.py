@@ -28,6 +28,8 @@ def index():
     b.savefig(figfile_b, format='svg')
     figfile_b.seek(0)
     figdata_svg_b = '<svg' + figfile_b.getvalue().split('<svg')[1]
+    b.clf()
+    plot.close(b)
     illuminant = ILLUMINANTS_RELATIVE_SPDS['D50']
     XYZ = spectral_to_XYZ(spd, cmfs, illuminant)
     xy = XYZ_to_xy(XYZ)
@@ -48,6 +50,9 @@ def index():
     a.savefig(figfile, format='svg')
     figfile.seek(0)
     figdata_svg = '<svg' + figfile.getvalue().split('<svg')[1]
+    a.clf()
+    plot.close(a)
+    del a, b
     #pprint.pprint(figdata_svg)
     return render_template('index.html', spd=figdata_svg_b, result=figdata_svg)
 
