@@ -1,0 +1,15 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Test{% endblock %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<div class="container" style="width:500px; height:auto; float:left; display:inline">
+    {{ spd|safe }}
+</div>
+<div class="container" style="width:500px; height:auto; float:left; display:inline">
+    {{ result|safe }}
+</div>
+{% endblock %}
