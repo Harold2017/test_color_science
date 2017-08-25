@@ -8,7 +8,7 @@ from colour import CMFS, ILLUMINANTS_RELATIVE_SPDS, SpectralPowerDistribution, s
 import pandas as pd
 import pylab
 from io import StringIO
-# import pprint
+import pprint
 import matplotlib.pyplot as plot
 
 app = Flask(__name__)
@@ -38,8 +38,11 @@ def index():
     print(xy)
     cct = xy_to_CCT(xy)
     print(cct)
-    cri = colour_rendering_index(spd)
-    print(cri)
+    cri = colour_rendering_index(spd, additional_data=True)
+    print(cri.Q_a)
+    Q_as = cri.Q_as
+    y = [s[1].Q_a for s in sorted(Q_as.items(), key=lambda s: s[0])]
+    print(y)
     single_spd_colour_rendering_index_bars_plot(spd, standalone=False, figure_size=(7, 7),
                                                 title='Colour rendering index')
     c = plot.gcf()
