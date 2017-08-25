@@ -1,7 +1,10 @@
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
-from colour.plotting import CIE_1931_chromaticity_diagram_plot, single_spd_plot, multi_spd_plot
-from colour import CMFS, ILLUMINANTS_RELATIVE_SPDS, SpectralPowerDistribution, spectral_to_XYZ, XYZ_to_xy
+from colour.plotting import CIE_1931_chromaticity_diagram_plot, single_spd_plot, multi_spd_plot,\
+    single_spd_colour_rendering_index_bars_plot
+
+from colour import CMFS, ILLUMINANTS_RELATIVE_SPDS, SpectralPowerDistribution, spectral_to_XYZ, XYZ_to_xy, xy_to_CCT,\
+    colour_rendering_index
 import pandas as pd
 import pylab
 from io import StringIO
@@ -33,8 +36,21 @@ def index():
     XYZ = spectral_to_XYZ(spd, cmfs, illuminant)
     xy = XYZ_to_xy(XYZ)
     print(xy)
+    cct = xy_to_CCT(xy)
+    print(cct)
+    cri = colour_rendering_index(spd)
+    print(cri)
+    single_spd_colour_rendering_index_bars_plot(spd, standalone=False, figure_size=(7, 7),
+                                                title='Colour rendering index')
+    c = plot.gcf()
+    figfile_c = StringIO()
+    c.savefig(figfile_c, format='svg')
+    figfile_c.seek(0)
+    figdata_svg_c = '<svg' + figfile_c.getvalue().split('<svg')[1]
+    c.clf()
+    plot.close(c)
 
-    CIE_1931_chromaticity_diagram_plot(standalone=False, figure_size=(5, 5), grid=False,
+    CIE_1931_chromaticity_diagram_plot(standalone=False, figure_size=(6, 5), grid=False,
                                        title='CIE 1931 Chromaticity Diagram', bounding_box=(-0.1, 0.9, -0.05, 0.95))
     x, y = xy
     pylab.plot(x, y, 'o-', color='white')
@@ -51,9 +67,9 @@ def index():
     figdata_svg = '<svg' + figfile.getvalue().split('<svg')[1]
     a.clf()
     plot.close(a)
-    del a, b
+    del a, b, c
     # pprint.pprint(figdata_svg)
-    return render_template('index.html', spd=figdata_svg_b, result=figdata_svg)
+    return render_template('index.html', spd=figdata_svg_b, result=figdata_svg, colour_rendering_index=figdata_svg_c)
 
 
 @app.route('/multiple')

@@ -6,10 +6,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" style="width:500px; height:auto; float:left; display:inline">
+<div class="container" style="width:600px; height:auto; float:left; display:inline">
     {{ spd|safe }}
 </div>
-<div class="container" style="width:500px; height:auto; float:left; display:inline">
+<div class="container" style="width:600px; height:auto; float:left; display:inline">
     {{ result|safe }}
+</div>
+<div class="container" style="width:600px; height:auto; float:left; display:inline">
+    {{ colour_rendering_index|safe }}
 </div>
 {% endblock %}
